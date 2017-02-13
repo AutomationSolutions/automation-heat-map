@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+  "name": "AutomationHeatMap",
+  "description": "AutomationHeatMap",
+  "version": "0.1.0",
+  "browser_action": {
+    "default_icon": "ahm-icon.png",
+    "default_popup": "ahm-popup.html",
+	"default_title": "AutomationHeatMap"
+  },
+  "permissions": [   
+    "activeTab"    
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+       "http://myd-vm12623.hpeswlab.net/*"
+      ],
+      "css": ["ahm-style.css"],
+	  "js": ["jobs-short-names.js", "content.js", "jquery-3.1.1.min.js"]
+    }
+  ]
+}
