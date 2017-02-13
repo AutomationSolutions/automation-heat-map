@@ -1,29 +1,30 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static javafx.scene.input.KeyCode.K;
+import static javafx.scene.input.KeyCode.V;
+
 /**
  * Created by malkahan on 2/5/2017.
  */
-public class parsingToCSS {
-    public String parsedFromText;
+class parsingToCSS {
+    String parsedFromText;
 
-    public parsingToCSS() {
+    parsingToCSS() {
         parsedFromText = "";
     }
 
-    public String getParsedStringFromFile(String path) throws IOException {
+    String getParsedStringFromFile(String path) throws IOException {
         String contents = Files.lines(Paths.get(path)).collect(Collectors.joining("\n"));
         return contents;
     }
 
-    public String removeTimePrefixFromLine(String fileContent) {
+    String removeTimePrefixFromLine(String fileContent) {
         StringBuilder builder = new StringBuilder();
         String[] lines = fileContent.split("\r\n|\r|\n");
         Pattern timePattern = Pattern.compile("(?m)^(\\d\\d:\\d\\d:\\d\\d)");
@@ -38,10 +39,10 @@ public class parsingToCSS {
         return builder.toString();
     }
 
-    public List<String> createLocatorsStructure(String fileContent) {
+    List<String> createLocatorsStructure(String fileContent) {
         String stringPattern = "INFO: Executing Clicking on By.chained({";
         List<String> returnedString = new ArrayList<>();
-        String[] lines = fileContent.split("\r\n|\r|\n");
+        String[] lines = fileContent.split("\\r?\\n");
 
         for (int i = 0; i < lines.length; i++) {
             if (lines[i].startsWith(stringPattern)) {
@@ -52,18 +53,22 @@ public class parsingToCSS {
         return returnedString;
     }
 
-    public List<String> createLocatorsHierarchy(List<String> locatorsList) {
+    HashMap<String, Integer> createLocatorsHierarchy(List<String> locatorsList) {
         List<String> returnedString;
+        HashMap<String, Integer> hashMap = new HashMap<>();
         returnedString = removeBySelector(locatorsList, "By.cssSelector: ", "");
         returnedString = removeBySelector(returnedString, "By.className: ", ".");
-        return returnedString;
+        for (String str : returnedString) {
+            int count = hashMap.get(str) != null ? hashMap.get(str) : 0;
+            hashMap.put(str, count + 1);
+        }
+        return hashMap;
     }
 
-    public List<String> removeXpathElements(List<String> list) {
+    List<String> removeXpathElements(List<String> list) {
         List<String> returnedString = new ArrayList<>();
         for (String listItem : list) {
             if (!listItem.contains("xpath")) {
-//                list.remove(list.indexOf(listItem));
                 returnedString.add(listItem);
             }
         }
