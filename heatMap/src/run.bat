@@ -1,0 +1,2 @@
+call javac HeatMapParser.java
+java HeatMapParser http://mydtbld0101.hpeswlab.net:8888 OMG MQM-UI-job-JavaFW-Sanity-Tests-Executor-full-master PIDI MQM-JavaFW-PIDI-Tests-full-master AGM1 MQM-UI-job-JavaFW-AGM1-Tests-Executor-full-master AGM2 MQM-UI-job-JavaFW-AGM2-Tests-Executor-full-master Cucumbar MQM-UI-job-Cucumber-Tests-Executor-full-master C:\GitHub\automation-heat-map\ahm-ext
