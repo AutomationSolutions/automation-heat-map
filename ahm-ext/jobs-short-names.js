@@ -1,1 +1,1 @@
-var ahmShortNames = ['Hanan','Kalish'];
+var ahmShortNames = ['OMG','PIDI','AGM1','AGM2','Cucumbar'];

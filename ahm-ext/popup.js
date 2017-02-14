@@ -24,17 +24,30 @@ function onAhmRadioClick() {
 }
 
 function createDOMElement(name) { 
+
 	var labelElement = document.createElement("label");
     var radioElement = document.createElement("input");
     var divElement = document.createElement("div");
 
     divElement.id = name + "-div";
+	
+	if(name === "None" || name==="All"){
+		labelElement.innerHTML = name;
+		if(name ==="None") {
+			radioElement.checked = "checked";
+		}
+ 	} else {
+		labelElement.innerHTML = name.substring(3, name.length);
+	}
+	
     labelElement.innerHTML = name;
 	labelElement.id = name + "-lbl";
+	labelElement.style = "font-size: medium; font-family: 'Comic Sans MS', cursive, sans-serif;";
+	
     radioElement.id = name;
+	radioElement.name = "selectGroup";
     radioElement.type = "radio";
-    radioElement.name = "selectGroup";
-    radioElement.value = name;
+	radioElement.value = name;
 	
     document.getElementById("radio-container").appendChild(divElement);
     document.getElementById(name + "-div").appendChild(radioElement);
@@ -49,5 +62,9 @@ setTimeout(function() {
 		createDOMElement("None");  
 	  }
 	  createDOMElement(ahmShortNames[i]);
+	  
+	  if(i===ahmShortNames.length-1) {
+		createDOMElement("All");
+	  }
   }
 }, 0);

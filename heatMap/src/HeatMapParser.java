@@ -8,10 +8,13 @@ public class HeatMapParser {
     public static void main(String[] args) {
 
         int exitCode = 0;
+        List<String> listBuilder = new ArrayList<>();
         List<String> allCSSRules = new ArrayList<>();
         List<String> jobShortNames = new ArrayList<>();
         try {
+
             parsingToCSS parse = new parsingToCSS();
+
             for (int i = 1; i < args.length - 1; i += 2) {
                 String simpleConsoleOutput = getRemoteConsoleOutput(args[0], args[i + 1]);
 
@@ -21,16 +24,22 @@ public class HeatMapParser {
                 //Phase 3 - Remove xpath elements
                 List<String> locatorsWithoutXpathElements = parse.removeXpathElements(locatorsFullStrings);
 
-                //Phase 4 - Remove Strings "By.xxxxx"
+                //Creating a list of all jobs
+                listBuilder.addAll(locatorsWithoutXpathElements);
+
+                //Phase 4 - Remove Strings "By.xxxxx" Counting and removing duplications
                 HashMap<String, Integer> locatorsHierarchyStructure = parse.createLocatorsHierarchy(locatorsWithoutXpathElements);
 
-                //Phase 5 - Counting and removing duplications
+                //Phase 5 - Sorting Elements
                 Map sortedMap = sortMapByValue(locatorsHierarchyStructure);
 
                 allCSSRules.addAll(getCSSRulesPerJob(sortedMap, args[i]));
 
                 jobShortNames.add(args[i]);
             }
+
+            Map sortedMapForAllJobs = sortMapByValue(parse.createLocatorsHierarchy(listBuilder));
+            allCSSRules.addAll(getCSSRulesPerJob(sortedMapForAllJobs, "All"));
             writeToFile(allCSSRules, jobShortNames, args[args.length - 1]);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -38,6 +47,7 @@ public class HeatMapParser {
         }
         System.exit(exitCode);
     }
+
 
     private static List<String> getCSSRulesPerJob(Map sortedMapElements, String shortName) {
         List<String> cssRules = new ArrayList<>();
@@ -53,15 +63,15 @@ public class HeatMapParser {
             if (hexValue.length() == 1) {
                 hexValue = "0" + hexValue;
             }
-            String cssRule = "." + shortName + " " + pair.getKey() + " { background-color: #ff" + hexValue + "00 !important; outline: 4px solid #ff" + hexValue + "00 !important; }" + System.getProperty("line.separator");
+            String cssRule = "." + "ahm-" + shortName + " " + pair.getKey() + " { background-color: #ff" + hexValue + "00 !important; outline: 4px solid #ff" + hexValue + "00 !important; }" + System.getProperty("line.separator");
             cssRules.add(cssRule);
         }
         return cssRules;
     }
 
     private static void writeToFile(List<String> cssRules, List<String> jobShortNames, String cssFilePath) throws IOException {
-        FileWriter writerToCss = new FileWriter(cssFilePath + "ahm-style.css");
-        FileWriter writerToShortNames = new FileWriter(cssFilePath + "jobs-short-names.js");
+        FileWriter writerToCss = new FileWriter(cssFilePath + "\\ahm-style.css");
+        FileWriter writerToShortNames = new FileWriter(cssFilePath + "\\jobs-short-names.js");
         try {
             writerToShortNames.write("var ahmShortNames = [");
 
