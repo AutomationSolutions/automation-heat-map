@@ -1,1 +1,1 @@
-# automation_heat_map
+# automation-heat-map
