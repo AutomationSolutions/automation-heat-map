@@ -14,7 +14,7 @@
   "content_scripts": [
     {
       "matches": [
-       "http://myd-vm12623.hpeswlab.net/*", "http://myd-vm12624.hpeswlab.net/*", "http://localhost:8080/*"
+       "http://localhost:8080/ui/*"
       ],
       "css": ["ahm-style.css"],
 	  "js": ["jobs-short-names.js", "content.js", "jquery-3.1.1.min.js"]
